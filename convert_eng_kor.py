@@ -1,31 +1,13 @@
 import re
 
 kor_dict = {
-    'ㄱ': 'r',
-    'ㄴ': 's',
-    'ㄷ': 'e',
-    'ㄹ': 'f',
-    'ㅁ': 'a',
-    'ㅂ': 'q',
-    'ㅅ': 't',
-    'ㅇ': 'd',
-    'ㅈ': 'w',
-    'ㅊ': 'c',
-    'ㅋ': 'z',
-    'ㅁ': 'a',
-    'ㅍ': 'v',
-    'ㅎ': 'g',
-    'ㅏ': 'l',
-    'ㅑ': 'i',
-    'ㅓ': 'j',
-    'ㅕ': 'u',
-    'ㅗ': 'h',
-    'ㅛ': 'y',
-    'ㅜ': 'n',
-    'ㅠ': 'b',
-    'ㅣ': 'l',
-    'ㅐ': 'o',
-    'ㅔ': 'p'
+    'ㄱ': 'r', 'ㄴ': 's', 'ㄷ': 'e', 'ㄹ': 'f',
+    'ㅁ': 'a', 'ㅂ': 'q', 'ㅅ': 't', 'ㅇ': 'd',
+    'ㅈ': 'w', 'ㅊ': 'c', 'ㅋ': 'z', 'ㅌ': 'x',
+    'ㅍ': 'v', 'ㅎ': 'g',
+    'ㅏ': 'k', 'ㅑ': 'i', 'ㅓ': 'j', 'ㅕ': 'u',
+    'ㅗ': 'h', 'ㅛ': 'y', 'ㅜ': 'n', 'ㅠ': 'b',
+    'ㅡ': 'm', 'ㅣ': 'l', 'ㅐ': 'o', 'ㅔ': 'p'
 }
 
 
@@ -45,23 +27,25 @@ def decompose_kor(s):
     ]
 
     result = []
-
     for c in s:
         if '가' <= c <= '힣':
             i = ord(c) - base
-            cho_index = i // 588
-            jung_index = (i - 588 * cho_index) // 28
-            jong_index = i % 28
-
-            result.append((cho_s[cho_index], jung_s[jung_index], jong_s[jong_index]))
+            cho_idx = i // 588
+            jung_idx = (i - 588 * cho_idx) // 28
+            jong_idx = i % 28
+            result.extend((cho_s[cho_idx], jung_s[jung_idx], jong_s[jong_idx]))
         else:
-            result.append(c)
+            result.extend(c)
 
     return result
 
 
-def kor_to_eng():
-    raise NotImplementedError
+def kor_to_eng(str_input):
+    idx_list = re.finditer(kor_dict.keys(), str_input)
+    for idx in idx_list:
+        kor_to_change = str_input[idx]
+        str_input.replace(kor_to_change, kor_dict[kor_to_change])
+    print(str_input)
 
 
 def eng_to_kor():
@@ -70,7 +54,4 @@ def eng_to_kor():
 
 if __name__ == '__main__':
     str_input = input()
-    idx_list = re.finditer(kor_dict.keys(), str_input)
-    for idx in idx_list:
-        str_input.replace(str_input[idx], kor_dict[str_input[idx]])
-    print(str_input)
+    kor_to_eng(str_input)
